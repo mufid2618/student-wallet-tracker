@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# XAMPP Setup Instructions for Student Wallet Tracker
+#
+# Because the project lives outside C:/xampp/htdocs, Apache needs to know
+# where to find it. Follow ONE of the two options below, then restart Apache.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ══════════════════════════════════════════════════════════════════════════════
+# OPTION A — Add an Apache Alias  (recommended — 5 lines in Notepad)
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# 1. Open Notepad AS ADMINISTRATOR.
+# 2. Open the file:
+#       C:\xampp\apache\conf\extra\httpd-xampp.conf
+# 3. Scroll to the bottom and paste the block below:
+#
+# ------- PASTE THIS INTO httpd-xampp.conf -------
+#
+# Alias /student-wallet-tracker "D:/1.KULIAH KUYY/IBM IT/student-wallet-tracker"
+# <Directory "D:/1.KULIAH KUYY/IBM IT/student-wallet-tracker">
+#     Options Indexes FollowSymLinks
+#     AllowOverride All
+#     Require all granted
+#     <LimitExcept GET POST DELETE PUT PATCH OPTIONS HEAD>
+#         Require all denied
+#     </LimitExcept>
+# </Directory>
+#
+# ------- END PASTE -------
+#
+# 4. Save the file.
+# 5. In XAMPP Control Panel click "Stop" then "Start" next to Apache.
+# 6. Open: http://localhost/student-wallet-tracker/login.html
+#
+# ══════════════════════════════════════════════════════════════════════════════
+# OPTION B — Move the project into htdocs  (simplest)
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# 1. Copy (or move) the entire student-wallet-tracker folder into:
+#       C:\xampp\htdocs\
+#    so the path becomes:
+#       C:\xampp\htdocs\student-wallet-tracker\
+#
+# 2. No Apache restart needed.
+# 3. Open: http://localhost/student-wallet-tracker/login.html
+#
+# ══════════════════════════════════════════════════════════════════════════════
+# Why 405 happened
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# The project was NOT being served by Apache at all (wrong drive/path).
+# Apache couldn't find the .htaccess that allows the DELETE verb, so it
+# either returned 404 (file not found) or the browser hit a cached
+# wrong response.  Once the project is accessible via localhost, the
+# .htaccess files already in the project will handle DELETE correctly.
+#
+# ══════════════════════════════════════════════════════════════════════════════
+# Verify it is working
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Open your browser and visit:
+#   http://localhost/student-wallet-tracker/login.html
+#
+# If you see the login page → setup is complete!
+# If you get 403 Forbidden  → the Directory block above is missing "Require all granted"
+# If you get 404 Not Found  → the Alias path or folder name is wrong (check spelling/spaces)

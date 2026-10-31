@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Wallet Tracker — Tambah Transaksi</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d4ed8',
+            'primary-light': '#3b82f6',
+            success: '#22c55e',
+            danger : '#ef4444',
+            warning: '#eab308',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR OVERLAY (mobile)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="sidebar-overlay"
+       class="fixed inset-0 bg-black/40 z-20 hidden lg:hidden"
+       onclick="closeSidebar()"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════════════════════ -->
+  <aside id="sidebar"
+         class="fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-200
+                flex flex-col z-30 transform -translate-x-full lg:translate-x-0
+                transition-transform duration-300 ease-in-out shadow-xl lg:shadow-none">
+
+    <!-- Brand -->
+    <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-100">
+      <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342
+                   1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0
+                   -.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0
+                   .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504
+                   1.125 1.125v9.75c0 .621-.504 1.125-1.125
+                   1.125h-.375m1.5-1.5H21a.75.75 0
+                   00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0
+                   01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15
+                   10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12
+                   0h.008v.008H6V10.5z"/>
+        </svg>
+      </div>
+      <div>
+        <p class="font-bold text-slate-800 text-sm leading-tight">Student Wallet</p>
+        <p class="text-xs text-slate-400">Tracker</p>
+      </div>
+    </div>
+
+    <!-- Nav Links -->
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+
+      <a href="index.html"
+         class="nav-link flex items-center gap-3 px-4 py-2.5 text-sm font-medium
+                text-slate-600 hover:bg-slate-100 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1
+                   1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011
+                   1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a href="transaction.html"
+         class="nav-link active flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>
+        Tambah Transaksi
+      </a>
+
+      <a href="history.html"
+         class="nav-link flex items-center gap-3 px-4 py-2.5 text-sm font-medium
+                text-slate-600 hover:bg-slate-100 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2
+                   0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0
+                   012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+        </svg>
+        Riwayat Transaksi
+      </a>
+
+    </nav>
+
+    <!-- Budget quick view -->
+    <div class="px-4 py-4 border-t border-slate-100">
+      <!-- Logged-in user -->
+      <div class="flex items-center gap-2 px-1 mb-2">
+        <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+          <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501
+                     20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676
+                     0-5.216-.584-7.499-1.632z"/>
+          </svg>
+        </div>
+        <span id="sidebar-username" class="text-sm font-medium text-slate-700 truncate">…</span>
+      </div>
+      <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">Anggaran Aktif</p>
+      <p id="sidebar-budget" class="text-sm font-semibold text-slate-700">Memuat…</p>
+      <!-- Logout -->
+      <button onclick="handleLogout()"
+              class="mt-3 w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium
+                     text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25
+                   2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12
+                   9l-3 3m0 0l3 3m-3-3h12.75"/>
+        </svg>
+        Keluar
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="flex-1 flex flex-col lg:ml-64 min-w-0">
+
+    <!-- Top Bar -->
+    <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-4
+                   flex items-center justify-between sticky top-0 z-10">
+      <button onclick="openSidebar()"
+              class="lg:hidden p-1.5 rounded-md text-slate-500 hover:bg-slate-100">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-lg font-bold text-slate-800">Tambah Transaksi</h1>
+        <p class="text-xs text-slate-400">Catat pemasukan atau pengeluaran baru</p>
+      </div>
+      <a href="history.html"
+         class="text-xs text-primary font-medium hover:underline hidden sm:block">
+        Lihat Riwayat →
+      </a>
+    </header>
+
+    <!-- Page Body -->
+    <main class="flex-1 p-4 sm:p-6 flex justify-center">
+      <div class="w-full max-w-xl">
+
+        <!-- Form Card -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-sm">
+
+          <form id="tx-form" novalidate class="space-y-5">
+
+            <!-- Row: Tanggal + Jenis -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <!-- Tanggal -->
+              <div>
+                <label for="tx-date"
+                       class="block text-sm font-medium text-slate-600 mb-1.5">
+                  Tanggal <span class="text-red-500">*</span>
+                </label>
+                <input id="tx-date" name="date" type="date"
+                       class="form-input w-full border border-slate-200 rounded-xl
+                              px-3 py-2.5 text-sm bg-white" />
+                <p id="err-date" class="text-xs text-red-500 mt-1 hidden"></p>
+              </div>
+
+              <!-- Jenis Transaksi -->
+              <div>
+                <label for="tx-type"
+                       class="block text-sm font-medium text-slate-600 mb-1.5">
+                  Jenis Transaksi <span class="text-red-500">*</span>
+                </label>
+                <select id="tx-type" name="type"
+                        class="form-input w-full border border-slate-200 rounded-xl
+                               px-3 py-2.5 text-sm bg-white cursor-pointer">
+                  <option value="">— Pilih —</option>
+                  <option value="income">💚 Pemasukan</option>
+                  <option value="expense">🔴 Pengeluaran</option>
+                </select>
+                <p id="err-type" class="text-xs text-red-500 mt-1 hidden"></p>
+              </div>
+
+            </div>
+
+            <!-- Row: Dompet + Kategori -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <!-- Dompet -->
+              <div>
+                <label for="tx-wallet"
+                       class="block text-sm font-medium text-slate-600 mb-1.5">
+                  Dompet <span class="text-red-500">*</span>
+                </label>
+                <select id="tx-wallet" name="wallet"
+                        class="form-input w-full border border-slate-200 rounded-xl
+                               px-3 py-2.5 text-sm bg-white cursor-pointer">
+                  <option value="">— Pilih —</option>
+                  <option value="cash">💵 Cash</option>
+                  <option value="bank">🏦 Rekening Bank</option>
+                  <option value="ewallet">📱 E-Wallet</option>
+                </select>
+                <p id="err-wallet" class="text-xs text-red-500 mt-1 hidden"></p>
+              </div>
+
+              <!-- Kategori -->
+              <div>
+                <label for="tx-category"
+                       class="block text-sm font-medium text-slate-600 mb-1.5">
+                  Kategori <span class="text-red-500">*</span>
+                </label>
+                <select id="tx-category" name="category"
+                        class="form-input w-full border border-slate-200 rounded-xl
+                               px-3 py-2.5 text-sm bg-white cursor-pointer">
+                  <option value="">— Pilih —</option>
+                  <!-- Populated dynamically by transaction.js based on type -->
+                </select>
+                <p id="err-category" class="text-xs text-red-500 mt-1 hidden"></p>
+              </div>
+
+            </div>
+
+            <!-- Jumlah -->
+            <div>
+              <label for="tx-amount"
+                     class="block text-sm font-medium text-slate-600 mb-1.5">
+                Jumlah (Rp) <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400
+                             text-sm font-medium pointer-events-none">Rp</span>
+                <input id="tx-amount" name="amount" type="number" min="1"
+                       placeholder="0"
+                       class="form-input w-full border border-slate-200 rounded-xl
+                              pl-9 pr-3 py-2.5 text-sm bg-white" />
+              </div>
+              <p id="err-amount" class="text-xs text-red-500 mt-1 hidden"></p>
+            </div>
+
+            <!-- Catatan -->
+            <div>
+              <label for="tx-note"
+                     class="block text-sm font-medium text-slate-600 mb-1.5">
+                Catatan
+                <span class="text-slate-400 font-normal">(opsional)</span>
+              </label>
+              <textarea id="tx-note" name="note" rows="3"
+                        placeholder="e.g. Makan siang bersama teman..."
+                        class="form-input w-full border border-slate-200 rounded-xl
+                               px-3 py-2.5 text-sm bg-white resize-none"></textarea>
+            </div>
+
+            <!-- Submit -->
+            <button type="submit"
+                    class="btn-primary w-full bg-primary text-white font-semibold
+                           text-sm py-3 rounded-xl mt-2 flex items-center justify-center gap-2">
+              <span id="submit-btn-text">Simpan Transaksi</span>
+              <svg id="submit-spinner" class="hidden w-4 h-4 animate-spin"
+                   fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                        stroke-width="4"/>
+                <path class="opacity-75" fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+              </svg>
+            </button>
+
+          </form>
+
+        </div>
+
+        <!-- Quick link to history -->
+        <p class="text-center text-xs text-slate-400 mt-4">
+          Ingin melihat semua catatan?
+          <a href="history.html" class="text-primary font-medium hover:underline">
+            Buka Riwayat Transaksi →
+          </a>
+        </p>
+
+      </div>
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 py-4 border-t border-slate-100">
+      Student Wallet Tracker &copy; <span id="footer-year"></span>
+    </footer>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TOAST NOTIFICATION
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="toast"
+       class="hide fixed bottom-6 right-6 bg-slate-800 text-white text-sm
+              px-4 py-3 rounded-xl shadow-lg z-50 max-w-xs">
+    <span id="toast-msg"></span>
+  </div>
+
+  <script type="module" src="transaction.js"></script>
+
+  <script>
+    function openSidebar() {
+      document.getElementById('sidebar').classList.remove('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>

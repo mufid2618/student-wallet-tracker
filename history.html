@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Wallet Tracker — Riwayat Transaksi</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#1d4ed8',
+            'primary-light': '#3b82f6',
+            success: '#22c55e',
+            danger : '#ef4444',
+            warning: '#eab308',
+          },
+        },
+      },
+    };
+  </script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 min-h-screen flex">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR OVERLAY (mobile)
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="sidebar-overlay"
+       class="fixed inset-0 bg-black/40 z-20 hidden lg:hidden"
+       onclick="closeSidebar()"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════════════════════ -->
+  <aside id="sidebar"
+         class="fixed top-0 left-0 h-full w-64 bg-white border-r border-slate-200
+                flex flex-col z-30 transform -translate-x-full lg:translate-x-0
+                transition-transform duration-300 ease-in-out shadow-xl lg:shadow-none">
+
+    <!-- Brand -->
+    <div class="flex items-center gap-3 px-6 py-5 border-b border-slate-100">
+      <div class="w-9 h-9 bg-primary rounded-lg flex items-center justify-center flex-shrink-0">
+        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342
+                   1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0
+                   -.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0
+                   .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504
+                   1.125 1.125v9.75c0 .621-.504 1.125-1.125
+                   1.125h-.375m1.5-1.5H21a.75.75 0
+                   00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0
+                   01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15
+                   10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12
+                   0h.008v.008H6V10.5z"/>
+        </svg>
+      </div>
+      <div>
+        <p class="font-bold text-slate-800 text-sm leading-tight">Student Wallet</p>
+        <p class="text-xs text-slate-400">Tracker</p>
+      </div>
+    </div>
+
+    <!-- Nav Links -->
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+
+      <a href="index.html"
+         class="nav-link flex items-center gap-3 px-4 py-2.5 text-sm font-medium
+                text-slate-600 hover:bg-slate-100 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1
+                   1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011
+                   1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a href="transaction.html"
+         class="nav-link flex items-center gap-3 px-4 py-2.5 text-sm font-medium
+                text-slate-600 hover:bg-slate-100 rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>
+        Tambah Transaksi
+      </a>
+
+      <a href="history.html"
+         class="nav-link active flex items-center gap-3 px-4 py-2.5 text-sm font-medium rounded-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2
+                   0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0
+                   012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+        </svg>
+        Riwayat Transaksi
+      </a>
+
+    </nav>
+
+    <!-- Quick stats + user + logout -->
+    <div class="px-4 py-4 border-t border-slate-100 space-y-3">
+
+      <!-- Logged-in user -->
+      <div class="flex items-center gap-2 px-1">
+        <div class="w-7 h-7 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+          <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor"
+               stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501
+                     20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676
+                     0-5.216-.584-7.499-1.632z"/>
+          </svg>
+        </div>
+        <span id="sidebar-username" class="text-sm font-medium text-slate-700 truncate">…</span>
+      </div>
+
+      <div>
+        <p class="text-xs text-slate-400 font-medium uppercase tracking-wide mb-1">
+          Ringkasan Semua Waktu
+        </p>
+        <p class="text-xs text-slate-600">
+          Total transaksi: <span id="sidebar-total-count" class="font-semibold">0</span>
+        </p>
+      </div>
+
+      <!-- Logout -->
+      <button onclick="handleLogout()"
+              class="w-full flex items-center gap-2 px-3 py-2.5 text-sm font-medium
+                     text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25
+                   2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12
+                   9l-3 3m0 0l3 3m-3-3h12.75"/>
+        </svg>
+        Keluar
+      </button>
+
+    </div>
+  </aside>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════════════════════ -->
+  <div class="flex-1 flex flex-col lg:ml-64 min-w-0">
+
+    <!-- Top Bar -->
+    <header class="bg-white border-b border-slate-200 px-4 sm:px-6 py-4
+                   flex items-center justify-between sticky top-0 z-10">
+      <button onclick="openSidebar()"
+              class="lg:hidden p-1.5 rounded-md text-slate-500 hover:bg-slate-100">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-lg font-bold text-slate-800">Riwayat Transaksi</h1>
+        <p class="text-xs text-slate-400">Semua catatan keuangan Anda</p>
+      </div>
+      <div class="hidden sm:flex items-center gap-2">
+        <button id="btn-download-pdf"
+                class="flex items-center gap-1.5 border border-slate-200 text-slate-600
+                       text-xs font-medium px-3 py-2 rounded-lg hover:bg-slate-50 transition-colors">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021
+                     18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+          </svg>
+          Download PDF
+        </button>
+        <a href="transaction.html"
+           class="btn-primary bg-primary text-white text-xs font-medium
+                  px-3 py-2 rounded-lg flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
+               viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+          </svg>
+          Tambah
+        </a>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <main class="flex-1 p-4 sm:p-6 space-y-4">
+
+      <!-- ── Filter + Search Bar ─────────────────────────────── -->
+      <div class="bg-white rounded-2xl border border-slate-100 p-4 shadow-sm">
+        <div class="flex flex-col sm:flex-row gap-3 flex-wrap">
+
+          <!-- Filter: Bulan -->
+          <div class="relative">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25
+                       2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0
+                       0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+            </svg>
+            <input id="filter-month" type="month"
+                   class="form-input border border-slate-200 rounded-xl pl-9 pr-3 py-2.5
+                          text-sm bg-white cursor-pointer sm:w-44" />
+          </div>
+
+          <!-- Search -->
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"
+                 fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0015.803 15.803z"/>
+            </svg>
+            <input id="search-input" type="text" placeholder="Cari catatan transaksi..."
+                   class="form-input w-full border border-slate-200 rounded-xl pl-9 pr-3
+                          py-2.5 text-sm bg-white" />
+          </div>
+
+          <!-- Filter: Jenis -->
+          <select id="filter-type"
+                  class="form-input border border-slate-200 rounded-xl px-3 py-2.5
+                         text-sm bg-white cursor-pointer sm:w-44">
+            <option value="">Semua Jenis</option>
+            <option value="income">Pemasukan</option>
+            <option value="expense">Pengeluaran</option>
+          </select>
+
+          <!-- Filter: Kategori -->
+          <select id="filter-category"
+                  class="form-input border border-slate-200 rounded-xl px-3 py-2.5
+                         text-sm bg-white cursor-pointer sm:w-44">
+            <option value="">Semua Kategori</option>
+            <!-- Populated dynamically by history.js -->
+          </select>
+
+          <!-- Filter: Dompet -->
+          <select id="filter-wallet"
+                  class="form-input border border-slate-200 rounded-xl px-3 py-2.5
+                         text-sm bg-white cursor-pointer sm:w-44">
+            <option value="">Semua Dompet</option>
+            <option value="cash">Cash</option>
+            <option value="bank">Rekening Bank</option>
+            <option value="ewallet">E-Wallet</option>
+          </select>
+
+        </div>
+
+        <!-- Results count -->
+        <p id="results-count" class="text-xs text-slate-400 mt-3"></p>
+      </div>
+
+      <!-- ── Transaction Table ──────────────────────────────── -->
+      <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+
+        <!-- Desktop table (hidden on small screens) -->
+        <div class="hidden sm:block overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="bg-slate-50 border-b border-slate-100">
+                <th data-sort="date"
+                    class="text-left px-5 py-3.5 font-semibold text-slate-500 text-xs
+                           uppercase tracking-wide select-none cursor-pointer hover:text-slate-700 transition-colors">
+                  Tanggal<span class="sort-icon font-normal normal-case tracking-normal"> ↓</span>
+                </th>
+                <th class="text-left px-5 py-3.5 font-semibold text-slate-500 text-xs
+                           uppercase tracking-wide">Jenis</th>
+                <th class="text-left px-5 py-3.5 font-semibold text-slate-500 text-xs
+                           uppercase tracking-wide">Dompet</th>
+                <th class="text-left px-5 py-3.5 font-semibold text-slate-500 text-xs
+                           uppercase tracking-wide">Kategori</th>
+                <th data-sort="amount"
+                    class="text-right px-5 py-3.5 font-semibold text-slate-500 text-xs
+                           uppercase tracking-wide select-none cursor-pointer hover:text-slate-700 transition-colors">
+                  Jumlah<span class="sort-icon font-normal normal-case tracking-normal"> ↕</span>
+                </th>
+                <th class="text-left px-5 py-3.5 font-semibold text-slate-500 text-xs
+                           uppercase tracking-wide">Catatan</th>
+                <th class="px-5 py-3.5"></th>
+              </tr>
+            </thead>
+            <tbody id="tx-table-body">
+              <!-- Rendered by history.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mobile cards (hidden on sm+) -->
+        <div id="tx-mobile-list" class="sm:hidden divide-y divide-slate-100">
+          <!-- Rendered by history.js -->
+        </div>
+
+        <!-- Empty state -->
+        <div id="empty-state" class="hidden py-16 text-center">
+          <svg class="w-12 h-12 text-slate-200 mx-auto mb-3" fill="none" stroke="currentColor"
+               stroke-width="1.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2
+                     0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0
+                     012-2h2a2 2 0 012 2"/>
+          </svg>
+          <p class="text-sm text-slate-400">Tidak ada transaksi ditemukan.</p>
+          <a href="transaction.html"
+             class="mt-3 inline-block text-xs text-primary font-medium hover:underline">
+            Tambah transaksi pertama →
+          </a>
+        </div>
+
+      </div>
+
+    </main>
+
+    <footer class="text-center text-xs text-slate-400 py-4 border-t border-slate-100">
+      Student Wallet Tracker &copy; <span id="footer-year"></span>
+    </footer>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       TOAST NOTIFICATION
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="toast"
+       class="hide fixed bottom-6 right-6 bg-slate-800 text-white text-sm
+              px-4 py-3 rounded-xl shadow-lg z-50 max-w-xs">
+    <span id="toast-msg"></span>
+  </div>
+
+  <!-- Confirm Delete Dialog -->
+  <div id="confirm-dialog"
+       class="hidden fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6">
+      <h3 class="text-base font-bold text-slate-800 mb-2">Hapus Transaksi?</h3>
+      <p class="text-sm text-slate-500 mb-5">
+        Tindakan ini tidak dapat dibatalkan. Transaksi akan dihapus permanen.
+      </p>
+      <div class="flex gap-3 justify-end">
+        <button id="confirm-cancel"
+                class="text-sm font-medium text-slate-600 px-4 py-2 rounded-lg
+                       bg-slate-100 hover:bg-slate-200 transition-colors">
+          Batal
+        </button>
+        <button id="confirm-delete"
+                class="text-sm font-medium text-white px-4 py-2 rounded-lg
+                       bg-danger hover:bg-red-700 transition-colors">
+          Ya, Hapus
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       EDIT TRANSACTION MODAL
+  ═══════════════════════════════════════════════════════════ -->
+  <div id="edit-dialog"
+       class="hidden fixed inset-0 bg-black/40 z-40 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg p-6">
+
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="text-base font-bold text-slate-800">Edit Transaksi</h3>
+        <button id="edit-close"
+                class="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <form id="edit-form" novalidate class="space-y-4">
+        <input type="hidden" id="edit-id" />
+
+        <!-- Tanggal + Jenis -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="edit-date" class="block text-sm font-medium text-slate-600 mb-1.5">
+              Tanggal <span class="text-red-500">*</span>
+            </label>
+            <input id="edit-date" type="date"
+                   class="form-input w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white" />
+          </div>
+          <div>
+            <label for="edit-type" class="block text-sm font-medium text-slate-600 mb-1.5">
+              Jenis <span class="text-red-500">*</span>
+            </label>
+            <select id="edit-type"
+                    class="form-input w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white cursor-pointer">
+              <option value="">— Pilih —</option>
+              <option value="income">💚 Pemasukan</option>
+              <option value="expense">🔴 Pengeluaran</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Dompet + Kategori -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="edit-wallet" class="block text-sm font-medium text-slate-600 mb-1.5">
+              Dompet <span class="text-red-500">*</span>
+            </label>
+            <select id="edit-wallet"
+                    class="form-input w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white cursor-pointer">
+              <option value="">— Pilih —</option>
+              <option value="cash">💵 Cash</option>
+              <option value="bank">🏦 Rekening Bank</option>
+              <option value="ewallet">📱 E-Wallet</option>
+            </select>
+          </div>
+          <div>
+            <label for="edit-category" class="block text-sm font-medium text-slate-600 mb-1.5">
+              Kategori <span class="text-red-500">*</span>
+            </label>
+            <select id="edit-category"
+                    class="form-input w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white cursor-pointer">
+              <option value="">— Pilih —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Jumlah -->
+        <div>
+          <label for="edit-amount" class="block text-sm font-medium text-slate-600 mb-1.5">
+            Jumlah (Rp) <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium pointer-events-none">Rp</span>
+            <input id="edit-amount" type="number" min="1" placeholder="0"
+                   class="form-input w-full border border-slate-200 rounded-xl pl-9 pr-3 py-2.5 text-sm bg-white" />
+          </div>
+        </div>
+
+        <!-- Catatan -->
+        <div>
+          <label for="edit-note" class="block text-sm font-medium text-slate-600 mb-1.5">
+            Catatan <span class="text-slate-400 font-normal">(opsional)</span>
+          </label>
+          <textarea id="edit-note" rows="2" placeholder="e.g. Makan siang…"
+                    class="form-input w-full border border-slate-200 rounded-xl px-3 py-2.5 text-sm bg-white resize-none"></textarea>
+        </div>
+
+        <p id="edit-error" class="text-xs text-red-500 hidden"></p>
+
+        <div class="flex gap-3 justify-end pt-1">
+          <button type="button" id="edit-cancel"
+                  class="text-sm font-medium text-slate-600 px-4 py-2 rounded-lg
+                         bg-slate-100 hover:bg-slate-200 transition-colors">
+            Batal
+          </button>
+          <button type="submit" id="edit-save"
+                  class="text-sm font-medium text-white px-5 py-2 rounded-lg
+                         bg-primary hover:bg-blue-700 transition-colors flex items-center gap-2">
+            <span id="edit-save-text">Simpan</span>
+            <svg id="edit-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <script type="module" src="history.js?v=4"></script>
+
+  <script>
+    function openSidebar() {
+      document.getElementById('sidebar').classList.remove('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.remove('hidden');
+    }
+    function closeSidebar() {
+      document.getElementById('sidebar').classList.add('-translate-x-full');
+      document.getElementById('sidebar-overlay').classList.add('hidden');
+    }
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+
+</body>
+</html>
