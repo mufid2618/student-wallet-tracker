@@ -4,6 +4,219 @@
    anything Tailwind CSS utility classes cannot handle alone.
    ============================================================ */
 
+/* ---------- Dark Mode ---------- */
+html.dark {
+  color-scheme: dark;
+}
+/* Body & page background */
+html.dark body {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+/* Sidebar */
+html.dark #sidebar {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+html.dark #sidebar .border-b,
+html.dark #sidebar .border-t {
+  border-color: #334155;
+}
+html.dark #sidebar p.font-bold,
+html.dark #sidebar span.font-bold,
+html.dark #sidebar span.text-slate-800,
+html.dark #sidebar p.text-slate-800 {
+  color: #e2e8f0;
+}
+html.dark #sidebar p.text-slate-400,
+html.dark #sidebar p.text-xs.text-slate-400 {
+  color: #94a3b8;
+}
+html.dark #sidebar span#sidebar-username,
+html.dark #sidebar span.text-slate-700 {
+  color: #cbd5e1;
+}
+/* Nav links hover */
+html.dark .nav-link:not(.active):hover {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+html.dark .nav-link:not(.active) {
+  color: #94a3b8;
+}
+/* Header / Top Bar */
+html.dark header {
+  background-color: #1e293b;
+  border-color: #334155;
+}
+html.dark header h1 {
+  color: #f1f5f9;
+}
+html.dark header p,
+html.dark header .text-slate-400 {
+  color: #64748b;
+}
+/* Hamburger button */
+html.dark header button.text-slate-500 {
+  color: #94a3b8;
+}
+html.dark header button.text-slate-500:hover {
+  background-color: #334155;
+}
+/* Main content cards */
+html.dark .bg-white {
+  background-color: #1e293b !important;
+  border-color: #334155 !important;
+}
+html.dark .bg-slate-50 {
+  background-color: #0f172a !important;
+}
+html.dark .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+html.dark .text-slate-700 {
+  color: #e2e8f0 !important;
+}
+html.dark .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+html.dark .text-slate-500 {
+  color: #94a3b8 !important;
+}
+html.dark .text-slate-400 {
+  color: #64748b !important;
+}
+html.dark .border-slate-200 {
+  border-color: #334155 !important;
+}
+html.dark .border-slate-100 {
+  border-color: #1e293b !important;
+}
+/* Form inputs & selects */
+html.dark .form-input,
+html.dark input[type="date"],
+html.dark input[type="month"],
+html.dark input[type="number"],
+html.dark input[type="text"],
+html.dark select,
+html.dark textarea {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #334155 !important;
+}
+html.dark .form-input::placeholder,
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #475569 !important;
+}
+/* Progress track */
+html.dark .progress-track {
+  background-color: #334155;
+}
+/* Table */
+html.dark thead tr,
+html.dark .bg-slate-50.border-b {
+  background-color: #0f172a !important;
+}
+html.dark .tx-row:hover {
+  background-color: #1e3a5f;
+}
+html.dark th {
+  color: #94a3b8 !important;
+}
+html.dark td {
+  color: #cbd5e1 !important;
+  border-color: #334155 !important;
+}
+html.dark tr.border-b {
+  border-color: #334155 !important;
+}
+/* Remaining budget box */
+html.dark .bg-slate-50.rounded-xl {
+  background-color: #0f172a !important;
+}
+/* Metric cards hover */
+html.dark .metric-card:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+/* Footer */
+html.dark footer {
+  border-color: #334155;
+  color: #475569;
+}
+/* Scrollbar dark */
+html.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+/* Modal dialogs */
+html.dark #confirm-dialog > div,
+html.dark #edit-dialog > div {
+  background-color: #1e293b !important;
+}
+html.dark #confirm-dialog h3,
+html.dark #edit-dialog h3 {
+  color: #f1f5f9 !important;
+}
+html.dark #confirm-dialog p,
+html.dark #edit-dialog p {
+  color: #94a3b8 !important;
+}
+html.dark #confirm-cancel,
+html.dark #edit-cancel {
+  background-color: #334155 !important;
+  color: #cbd5e1 !important;
+}
+html.dark #confirm-cancel:hover,
+html.dark #edit-cancel:hover {
+  background-color: #475569 !important;
+}
+/* Badge / status */
+html.dark .bg-slate-100 {
+  background-color: #334155 !important;
+}
+html.dark .text-slate-500.bg-slate-100 {
+  color: #94a3b8 !important;
+}
+/* Loading overlay */
+html.dark #loading-overlay {
+  background-color: rgba(15, 23, 42, 0.85);
+}
+/* Toast in dark mode already has dark bg, keep it */
+
+/* ---------- Dark Mode Toggle Button ---------- */
+#dark-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+#dark-toggle:hover {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+html.dark #dark-toggle {
+  color: #94a3b8;
+}
+html.dark #dark-toggle:hover {
+  background-color: #334155;
+  color: #e2e8f0;
+}
+
 /* ---------- Custom Scrollbar ---------- */
 ::-webkit-scrollbar {
   width: 6px;
